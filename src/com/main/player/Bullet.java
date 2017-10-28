@@ -47,7 +47,7 @@ public class Bullet extends GameObject{
 
         g.setColor(Color.black);
         g.fillOval((int)x,(int)y,size,size);
-        //ImageIcon i = new ImageIcon("./src/com/main/Images/enemy.png");
+        //ImageIcon i = new ImageIcon("./resources/Images/enemy.png");
         //image = i.getImage();
         g.drawImage(image, (int)x, (int)y, size, size*2, Color.GRAY, null);
     }

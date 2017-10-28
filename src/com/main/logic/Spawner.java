@@ -30,6 +30,9 @@ public class Spawner {
 
 
     public void tick() {
+        if(handler.object.size() == 0){
+            handler.addObject(new Player(Game.WIDTH / 2 - 32, Game.HEIGHT - 94, ID.Player, handler));
+        }
         if ((Game.gameState == Game.STATE.Game) && (Player.HEALTH > 0)) {
             if (r.nextInt(scoreObjectRate) == 1) {
                 handler.addObject(new ScoreObject(r.nextInt(Game.WIDTH), 0, ID.ScoreObject, handler));

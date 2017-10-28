@@ -31,25 +31,37 @@ public class Menu extends MouseAdapter {
 
         if (Game.gameState == Game.STATE.Menu || game.gameState == Game.STATE.Help) {
             //play button
-            if (mouseOver(mx, my, Game.WIDTH / 2 - 170, 300, 300, 80)) {
+            if (mouseOver(mx, my, Game.WIDTH / 2 - 170, 200, 300, 80)) {
                 game.gameState = Game.STATE.Game;
-                handler.addObject(new Player(Game.WIDTH / 2 - 32, Game.HEIGHT - 94, ID.Player, handler));
+
                 game.addKeyListener(new KeyInputClass(handler, game));
             }
             //help button
-            if (mouseOver(mx, my, Game.WIDTH / 2 - 170, 500, 300, 80)) {
+            if (mouseOver(mx, my, Game.WIDTH / 2 - 170, 300, 300, 80)) {
                 game.gameState = Game.STATE.Help;
             }
             //help back button
             if (mouseOver(mx, my, Game.WIDTH / 2 - 170, -(150 - Game.HEIGHT), 300, 80))
                 game.gameState = Game.STATE.Menu;
             //quit button
-            if (mouseOver(mx, my, Game.WIDTH / 2 - 170, 700, 300, 80)) {
+            if (mouseOver(mx, my, Game.WIDTH / 2 - 170, 400, 300, 80)) {
                 System.exit(1);
             }
         }
 
+        if(Game.gameState == Game.STATE.Dead) {
+            if (mouseOver(mx, my, Game.WIDTH / 2 - 170, 400, 300, 80)) {
+                System.exit(1);
+            }
 
+             if (mouseOver(mx, my, Game.WIDTH / 2 - 170, 200, 300, 80)) {
+                game.gameState = Game.STATE.Menu;
+                handler.object.remove(0);
+                HUD.score = 0;
+                Player.HEALTH = 100;
+
+            }
+        }
     }
 
     public void mouseReleased(MouseEvent e) {
@@ -76,24 +88,37 @@ public class Menu extends MouseAdapter {
             g.setColor(Color.WHITE);
 
             g.setFont(fnt);
-            g.drawString("Menu", Game.WIDTH / 2 - 100, 100);
+            g.drawString("Menu", Game.WIDTH / 2 - 110, 100);
 
             g.setFont(fnt2);
-            g.drawString("Start", Game.WIDTH / 2 - 80, 355);
+            g.drawString("Start", Game.WIDTH / 2 - 80, 255);
+            g.drawRect(Game.WIDTH / 2 - 170, 200, 300, 80);
+            g.drawString("Help", Game.WIDTH / 2 - 80, 355);
             g.drawRect(Game.WIDTH / 2 - 170, 300, 300, 80);
-            g.drawString("Help", Game.WIDTH / 2 - 80, 555);
-            g.drawRect(Game.WIDTH / 2 - 170, 500, 300, 80);
-            g.drawString("Quit", Game.WIDTH / 2 - 80, 755);
-            g.drawRect(Game.WIDTH / 2 - 170, 700, 300, 80);
+            g.drawString("Quit", Game.WIDTH / 2 - 80, 455);
+            g.drawRect(Game.WIDTH / 2 - 170, 400, 300, 80);
         } else if (game.gameState == Game.STATE.Help) {
             g.setFont(fnt2);
             g.setColor(Color.WHITE);
-            g.drawString("To play this game use AD to move and ", 100, 100);
-            g.drawString("SPACE to shoot (shooting upgrade).", 100, 170);
+            g.drawString("To play this game use AD to move ", 100, 100);
+            g.drawString("and SPACE to shoot.", 100, 170);
 
             g.drawRect(Game.WIDTH / 2 - 170, -(150 - Game.HEIGHT), 300, 80);
             g.drawString("Back", Game.WIDTH / 2 - 80, -(95 - Game.HEIGHT));
 
+        }
+
+        else if(game.gameState == Game.STATE.Dead){
+            g.setColor(Color.RED);
+            g.setFont(new Font("optimus princeps", 1, 30));
+
+            g.drawString("You are dead", Game.WIDTH / 2, Game.HEIGHT / 2);
+
+            g.drawString("Quit", Game.WIDTH / 2 - 80, 455);
+            g.drawRect(Game.WIDTH / 2 - 170, 400, 300, 80);
+
+            g.drawString("Back to Menu", Game.WIDTH / 2 - 80, 255);
+            g.drawRect(Game.WIDTH / 2 - 170, 200, 300, 80);
         }
     }
 

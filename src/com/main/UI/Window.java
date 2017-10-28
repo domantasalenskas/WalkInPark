@@ -1,13 +1,8 @@
 package com.main.UI;
 
 import com.main.launcher.Game;
-import javafx.scene.layout.Background;
 
 import java.awt.*;
-import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.IOException;
-import javax.imageio.ImageIO;
 import javax.swing.JFrame;
 
 
@@ -28,7 +23,6 @@ public class Window extends Canvas  {
         frame.setLocationRelativeTo(null);
         frame.add(game);
         frame.setVisible(true);
-        //frame.set
         game.start();
 
     }

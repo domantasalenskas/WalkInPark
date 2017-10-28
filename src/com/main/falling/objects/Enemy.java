@@ -47,11 +47,8 @@ public class Enemy extends GameObject {
     Image image;
     @Override
     public void render(Graphics g) {
-
-        g.setColor(Color.red);
-        g.fillOval((int)x,(int)y,size,size);
-        ImageIcon i = new ImageIcon("./src/com/main/Images/enemy.png");
+        ImageIcon i = new ImageIcon(this.getClass().getResource("/Images/enemy.png"));
         image = i.getImage();
-        g.drawImage(image, (int)x, (int)y, size, size*2, Color.GRAY, null);
+        g.drawImage(image, (int)x, (int)y, size, size*2, null);
     }
 }

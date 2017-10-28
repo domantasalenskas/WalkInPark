@@ -50,10 +50,8 @@ public class ShieldUpgrade extends GameObject {
     @Override
     public void render(Graphics g) {
 
-        g.setColor(Color.GREEN);
-        g.fillOval((int)x,(int)y,32,32);
-        ImageIcon i = new ImageIcon("./src/com/main/Images/shieldUpgrade.png");
+        ImageIcon i = new ImageIcon(this.getClass().getResource("/Images/shieldUpgrade.png"));
         image = i.getImage();
-        g.drawImage(image, (int)x, (int)y, size, size*2, Color.GRAY, null);
+        g.drawImage(image, (int)x, (int)y, size, size*2, null);
     }
 }

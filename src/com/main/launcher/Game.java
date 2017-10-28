@@ -8,10 +8,9 @@ import com.main.logic.ID;
 import com.main.logic.Handler;
 import com.main.logic.Spawner;
 import com.main.player.Bullet;
-import com.main.player.IMovingHandler;
-import com.main.player.KeyInputClass;
 import com.main.player.Player;
 
+import javax.swing.*;
 import java.awt.*;
 import java.awt.image.BufferStrategy;
 import java.util.Random;
@@ -20,7 +19,7 @@ import java.util.Random;
 public class Game extends Canvas implements Runnable, IControlEventHandler {
 
     private static final long serialVersionUID = 4088146271165387233L;
-    public static final int WIDTH = 1000, HEIGHT = WIDTH / 12 * 9;
+    public static final int WIDTH = 1024, HEIGHT = WIDTH / 12 * 9;
     private Thread thread;
     private boolean running = false;
 
@@ -34,12 +33,15 @@ public class Game extends Canvas implements Runnable, IControlEventHandler {
     public void shoot() {
         for (int i = 0; i < handler.object.size(); i++) {
 
-            GameObject player = handler.object.get(i);
+            GameObject tempObject = handler.object.get(i);
 
-            if (player.getId() == ID.Player && Player.bullets > 0) {
-                handler.addObject(new Bullet(player.x+30, player.y, ID.Bullet, handler));
-                System.out.println(Player.bullets);
-                Player.bullets--;
+            if (tempObject.getId() == ID.Player){
+                Player player = (Player)tempObject;
+                if(player.bullets != 0){
+                    handler.addObject(new Bullet(player.x+30, player.y, ID.Bullet, handler));
+                    player.bullets--;
+                }
+
             }
 
         }
@@ -50,7 +52,8 @@ public class Game extends Canvas implements Runnable, IControlEventHandler {
     public enum STATE {
         Menu,
         Help,
-        Game
+        Game,
+        Dead
     }
 
     public static STATE gameState = STATE.Menu;
@@ -61,11 +64,11 @@ public class Game extends Canvas implements Runnable, IControlEventHandler {
 
         menu = new Menu(this, handler);
 
-        //this.addKeyListener(new KeyInputClass(handler, this));
         this.addMouseListener(menu);
 
-        hud = new HUD();
         spawner = new Spawner(handler, hud);
+
+        hud = new HUD(handler);
 
         new Window(WIDTH, HEIGHT, "Game", this);
 
@@ -98,7 +101,13 @@ public class Game extends Canvas implements Runnable, IControlEventHandler {
         double delta = 0;
         long timer = System.currentTimeMillis();
         int frames = 0;
-        while (running) {
+        while (running == true) {
+            try{
+                Thread.sleep(3);
+            } catch (InterruptedException e){
+
+            }
+
             long now = System.nanoTime();
             delta += (now - lastTime) / ns;
             lastTime = now;
@@ -109,6 +118,7 @@ public class Game extends Canvas implements Runnable, IControlEventHandler {
             if (running)
                 render();
             frames++;
+
 
             if (System.currentTimeMillis() - timer > 1000) {
                 timer += 1000;
@@ -122,15 +132,17 @@ public class Game extends Canvas implements Runnable, IControlEventHandler {
     private void tick() {
         handler.tick();
         if (gameState == STATE.Game) {
-            hud.tick();
             spawner.tick();
+            hud.tick();
         } else if (gameState == STATE.Menu)
             menu.tick();
+        else if (gameState == STATE.Dead){
+            menu.tick();
+        }
 
     }
-
     Image image;
-
+    String backgroundImage = "/Images/menu.jpg";
     private void render() {
         BufferStrategy bs = this.getBufferStrategy();
         if (bs == null) {
@@ -138,16 +150,28 @@ public class Game extends Canvas implements Runnable, IControlEventHandler {
             return;
         }
 
+        ImageIcon i = new ImageIcon(this.getClass().getResource(backgroundImage));
+        image = i.getImage();
         Graphics g = bs.getDrawGraphics();
-        g.setColor(Color.GRAY);
         g.fillRect(0, 0, WIDTH, HEIGHT);
+        g.drawImage(image, 0,0, null);
 
         handler.render(g);
 
         if (gameState == STATE.Game)
+        {
             hud.render(g);
-        else if (gameState == STATE.Menu || gameState == STATE.Help)
+            backgroundImage = "/Images/background.png";
+        }
+
+        else if (gameState == STATE.Menu || gameState == STATE.Help) {
             menu.render(g);
+            backgroundImage = "/Images/menu.jpg";
+        }
+        else if(gameState == STATE.Dead){
+            menu.render(g);
+            backgroundImage = "/Images/background.png";
+        }
         g.dispose();
         bs.show();
     }

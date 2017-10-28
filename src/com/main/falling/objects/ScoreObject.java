@@ -13,8 +13,6 @@ public class ScoreObject extends GameObject {
 
     private Handler handler;
 
-    Random r = new Random();
-
     int size = 32;
 
     public ScoreObject(float x, float y, ID id, Handler handler) {
@@ -47,11 +45,8 @@ public class ScoreObject extends GameObject {
     Image image;
     @Override
     public void render(Graphics g) {
-
-        g.setColor(Color.GREEN);
-        g.fillOval((int)x,(int)y,32,32);
-        ImageIcon i = new ImageIcon("./src/com/main/Images/icecream.png");
+        ImageIcon i = new ImageIcon(this.getClass().getResource("/Images/icecream.png"));
         image = i.getImage();
-        g.drawImage(image, (int)x, (int)y, size, size*2, Color.GRAY, null);
+        g.drawImage(image, (int)x, (int)y, size, size*2, null);
     }
 }

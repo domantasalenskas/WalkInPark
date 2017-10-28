@@ -49,9 +49,9 @@ public class Shield extends GameObject {
     @Override
     public void render(Graphics g) {
 
-        ImageIcon i = new ImageIcon("./src/com/main/Images/shield.png");
+        ImageIcon i = new ImageIcon(this.getClass().getResource("/Images/shield.png"));
         image = i.getImage();
-        g.drawImage(image, (int) x - 6, (int) y - 30, size * 3, size, Color.GRAY, null);
+        g.drawImage(image, (int) x - 6, (int) y - 30, size * 3, size, null);
     }
 
     private void collision() {

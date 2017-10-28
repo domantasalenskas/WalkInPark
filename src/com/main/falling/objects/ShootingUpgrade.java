@@ -42,18 +42,14 @@ public class ShootingUpgrade extends GameObject{
         if(x <= 0 || x >= Game.WIDTH-32){
             velX = velX * -1;
         }
-
-        //handler.addObject(new Trail( x, y, ID.Trail ,Color.red, size,size, 0.07f, handler));
     }
 
     Image image;
     @Override
     public void render(Graphics g) {
 
-        g.setColor(Color.red);
-        g.fillOval((int)x,(int)y,size,size);
-        ImageIcon i = new ImageIcon("./src/com/main/Images/shootingUpgrade.png");
+        ImageIcon i = new ImageIcon(this.getClass().getResource("/Images/shootingUpgrade.png"));
         image = i.getImage();
-        g.drawImage(image, (int)x, (int)y, size, size*3, Color.GRAY, null);
+        g.drawImage(image, (int)x, (int)y, size, size*3, null);
     }
 }

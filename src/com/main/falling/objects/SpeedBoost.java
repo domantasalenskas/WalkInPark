@@ -31,17 +31,6 @@ public class SpeedBoost extends GameObject {
         velY = 5;
     }
 
-    public static void boostSpeed(GameObject player) {
-        Player.playerSpeed += 10;
-//        System.out.println("?");
-//        int delay = 1000; //milliseconds BIG BUG
-//        ActionListener taskPerformer = new ActionListener() {
-//            public void actionPerformed(ActionEvent evt) {
-//                Player.playerSpeed -= 30;
-//            }
-//        };
-//        new Timer(delay, taskPerformer).start();
-    }
 
     @Override
     public Rectangle getBounds() {
@@ -67,10 +56,8 @@ public class SpeedBoost extends GameObject {
     @Override
     public void render(Graphics g) {
 
-        g.setColor(Color.GREEN);
-        g.fillOval((int) x, (int) y, 32, 32);
-        ImageIcon i = new ImageIcon("./src/com/main/Images/speedBoost.png");
+        ImageIcon i = new ImageIcon(this.getClass().getResource("/Images/speedBoost.png"));
         image = i.getImage();
-        g.drawImage(image, (int) x, (int) y, size, size * 2, Color.GRAY, null);
+        g.drawImage(image, (int) x, (int) y, size, size * 2, null);
     }
 }
