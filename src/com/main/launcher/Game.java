@@ -1,7 +1,9 @@
 package com.main.launcher;
 
+import com.main.DbConnect;
 import com.main.UI.HUD;
 import com.main.UI.Menu;
+import com.main.UI.ScoreSubmission;
 import com.main.UI.Window;
 import com.main.logic.GameObject;
 import com.main.logic.ID;
@@ -28,6 +30,10 @@ public class Game extends Canvas implements Runnable, IControlEventHandler {
     private HUD hud;
     private Spawner spawner;
     private Menu menu;
+    private DbConnect db;
+    private Window window;
+    private ScoreSubmission scoreSubmission;
+    public static STATE gameState = STATE.Menu;
 
     @Override
     public void shoot() {
@@ -41,28 +47,31 @@ public class Game extends Canvas implements Runnable, IControlEventHandler {
                     handler.addObject(new Bullet(player.x+30, player.y, ID.Bullet, handler));
                     player.bullets--;
                 }
-
             }
-
         }
     }
-
 
 
     public enum STATE {
         Menu,
         Help,
         Game,
-        Dead
+        Dead,
+        SubmitScore,
+        Scoreboard
     }
 
-    public static STATE gameState = STATE.Menu;
 
     public Game() {
 
         handler = new Handler();
 
-        menu = new Menu(this, handler);
+
+        db = new DbConnect();
+
+        scoreSubmission = new ScoreSubmission(db);
+
+        menu = new Menu(this, handler, db);
 
         this.addMouseListener(menu);
 
@@ -70,7 +79,7 @@ public class Game extends Canvas implements Runnable, IControlEventHandler {
 
         hud = new HUD(handler);
 
-        new Window(WIDTH, HEIGHT, "Game", this);
+        window = new Window(WIDTH, HEIGHT, "Game", this);
 
         r = new Random();
 
@@ -129,20 +138,26 @@ public class Game extends Canvas implements Runnable, IControlEventHandler {
         stop();
     }
 
+
     private void tick() {
         handler.tick();
         if (gameState == STATE.Game) {
             spawner.tick();
             hud.tick();
+            scoreSubmission.submitted = false;
         } else if (gameState == STATE.Menu)
             menu.tick();
         else if (gameState == STATE.Dead){
             menu.tick();
         }
+        else if(gameState == STATE.SubmitScore){
+            scoreSubmission.tick();
+        }
 
     }
+
     Image image;
-    String backgroundImage = "/Images/menu.jpg";
+    String backgroundImage = "/Images/menu.png";
     private void render() {
         BufferStrategy bs = this.getBufferStrategy();
         if (bs == null) {
@@ -166,11 +181,19 @@ public class Game extends Canvas implements Runnable, IControlEventHandler {
 
         else if (gameState == STATE.Menu || gameState == STATE.Help) {
             menu.render(g);
-            backgroundImage = "/Images/menu.jpg";
+            backgroundImage = "/Images/menu.png";
         }
         else if(gameState == STATE.Dead){
             menu.render(g);
-            backgroundImage = "/Images/background.png";
+            hud.render(g);
+            backgroundImage = "/Images/death.png";
+        }
+        else if(gameState == STATE.SubmitScore){
+            backgroundImage = "/Images/scoreBackground.jpg";
+        }
+        else if(gameState == STATE.Scoreboard){
+            backgroundImage = "/Images/scoreboard.png";
+            menu.render(g);
         }
         g.dispose();
         bs.show();

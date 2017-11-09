@@ -77,17 +77,11 @@ public class KeyInputClass extends KeyAdapter {
                 {
 
                     keyDown[2] = 0;
-//                    if (keyDown[3] == 1) {
-//                        this.movingHandler.movingRight();
-//                    }
                 }
 
                 if (key == KeyEvent.VK_D)
                 {
                     keyDown[3] = 0;
-//                    if (keyDown[2] == 1) {
-//                        this.movingHandler.movingLeft();
-//                    }
                 }
 
                 if(keyDown[2] == 0 && keyDown[3] == 0){

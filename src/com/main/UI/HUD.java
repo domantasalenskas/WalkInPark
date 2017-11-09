@@ -45,7 +45,8 @@ public class HUD {
                 if (getPlayer().speedBoostTime % 2 == 0 && getPlayer().speedBoostTime > 0)
                     g.setColor(Color.BLACK);
                 else g.setColor(Color.WHITE);
-                g.drawString("Speed boost " + getPlayer().speedBoostTime, Game.WIDTH / 2 - 75, 70);
+                if(Game.gameState != Game.STATE.Dead)
+                    g.drawString("Speed boost " + getPlayer().speedBoostTime, Game.WIDTH / 2 - 75, 70);
             }
         }
     }

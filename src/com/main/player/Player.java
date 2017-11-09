@@ -22,10 +22,9 @@ public class Player extends GameObject{
 
     enum PlayerState {
         StandingStill,
-        Dead
     }
 
-    private PlayerState state;
+    public PlayerState state;
     public static int HEALTH = 100;
     private Handler handler;
     public static int playerSpeed = 7;
@@ -47,6 +46,8 @@ public class Player extends GameObject{
         super(x, y, id);
         this.handler = handler;
         this.state = PlayerState.StandingStill;
+        HEALTH = 100;
+        playerSpeed = 7;
     }
 
     @Override
@@ -67,7 +68,6 @@ public class Player extends GameObject{
         collision();
 
     }
-    // should be somewhere else, because implements shield collision as well
 
     private void collision() {
         for (int i = 0; i < handler.object.size(); i++) {
