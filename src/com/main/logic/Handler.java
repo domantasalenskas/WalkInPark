@@ -1,5 +1,6 @@
 package com.main.logic;
 
+import com.main.launcher.Game;
 import com.main.player.Player;
 
 import java.awt.*;
@@ -15,25 +16,37 @@ public class Handler {
 
     public static int DEFAULT_GAME_TIME = 60;
     int gameTime = DEFAULT_GAME_TIME;
+    boolean turnOn = true;
 
-    public void tick(){
-        for(int i = 0; i < object.size(); i++){
+    public void tick() {
+        for (int i = 0; i < object.size(); i++) {
             GameObject tempObject = object.get(i);
 
             tempObject.tick();
         }
 
-        if (System.currentTimeMillis() - timer > 1000) {
-            timer += 1000;
-            if (gameTime > 0) {
-                gameTime--;
-                System.out.println(gameTime);
-                if (gameTime == 0) {
-                    Player.HEALTH = 0;
+        if (Game.gameState == Game.STATE.Game) {
+            if (turnOn) {
+                turnOn = false;
+                timer = System.currentTimeMillis();
+            }
+            if (System.currentTimeMillis() - timer > 1000) {
+                timer += 1000;
+                if (gameTime > 0) {
+                    gameTime--;
+                    System.out.println(gameTime);
+                    if (gameTime == 0) {
+                        Player.HEALTH = 0;
+                    }
                 }
             }
+
         }
 
+
+        if (Game.gameState != Game.STATE.Game) {
+            turnOn = true;
+        }
     }
 
     public Player getPlayer() {
@@ -49,25 +62,28 @@ public class Handler {
         return null;
     }
 
-    public void render(Graphics g){
-        for(int i = 0; i < object.size(); i++) {
+    public void render(Graphics g) {
+        for (int i = 0; i < object.size(); i++) {
             GameObject tempObject = object.get(i);
 
             tempObject.render(g);
         }
     }
 
-    public void clearEnemys(){
-        for(int i = object.size()-1; i > 0; i--){
+    public void clearEnemys() {
+        for (int i = object.size() - 1; i > 0; i--) {
             removeObject(object.get(i));
         }
     }
-    public void addObject(GameObject object){
+
+    public void addObject(GameObject object) {
         this.object.add(object);
     }
-    public void removeObject(GameObject object){
+
+    public void removeObject(GameObject object) {
         this.object.remove(object);
     }
+
     public int getGameTime() {
         return gameTime;
     }
