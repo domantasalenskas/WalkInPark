@@ -8,6 +8,8 @@ import com.main.player.Player;
 
 import java.awt.*;
 
+import static java.awt.Color.red;
+
 /**
  * Created by ulis on 2017-07-19.
  */
@@ -18,58 +20,74 @@ public class HUD {
     private int level = 0;
     private Handler handler;
 
-    public HUD(Handler handler){
+
+    public HUD(Handler handler) {
         this.handler = handler;
     }
-    public void tick(){
+
+    public void tick() {
         Player.HEALTH = Game.clamp(Player.HEALTH, 0, 100);
         greenValue = Game.clamp(greenValue,0,255);
-        greenValue = Player.HEALTH*2;
+        greenValue = Player.HEALTH * 2;
     }
+
     public void render(Graphics g) {
         g.setColor(Color.gray);
         int healthBarWitdh = 300;
-        g.fillRect(Game.WIDTH / 2 - healthBarWitdh/2, 15, healthBarWitdh, 32);
+        g.fillRect(Game.WIDTH / 2 - healthBarWitdh / 2, 15, healthBarWitdh, 32);
         g.setColor(new Color(75, greenValue, 0));
-        g.fillRect(Game.WIDTH / 2 - healthBarWitdh/2, 15, Player.HEALTH *3, 32);
+        g.fillRect(Game.WIDTH / 2 - healthBarWitdh / 2, 15, Player.HEALTH * 3, 32);
         g.setColor(Color.WHITE);
-        g.drawRect(Game.WIDTH / 2 - healthBarWitdh/2, 15, healthBarWitdh, 32);
+        g.drawRect(Game.WIDTH / 2 - healthBarWitdh / 2, 15, healthBarWitdh, 32);
 
-        g.setFont(new Font("arial", 1, 15));
+        g.setFont(new Font("arial", 1, 20));
 
         g.drawString("Score " + score, 14, 32);
-        if(getPlayer() !=  null) {
+        if (getPlayer() != null) {
             g.drawString("Bullets " + getPlayer().bullets, Game.WIDTH - 100, 32);
+            if (Game.gameState != Game.STATE.Dead){
+                if(handler.getGameTime() < 10){
+                    g.setColor(red);
+                }
+                g.drawString("Time left: " + handler.getGameTime(), Game.WIDTH/2-55, 70);
+            } else handler.setGameTime(Handler.DEFAULT_GAME_TIME);
             if (getPlayer().speedBoostTime > 0) {
                 g.setFont(new Font("arial", 1, 20));
                 if (getPlayer().speedBoostTime % 2 == 0 && getPlayer().speedBoostTime > 0)
                     g.setColor(Color.BLACK);
                 else g.setColor(Color.WHITE);
-                if(Game.gameState != Game.STATE.Dead)
-                    g.drawString("Speed boost " + getPlayer().speedBoostTime, Game.WIDTH / 2 - 75, 70);
+                if (Game.gameState != Game.STATE.Dead){
+                    g.drawString("Speed boost " + getPlayer().speedBoostTime, Game.WIDTH / 2 - 70, 90);
+                }
+
+
             }
         }
     }
 
-    public Player getPlayer(){
-        for(int i = 0; i < handler.object.size(); i++){
+    public Player getPlayer() {
+        for (int i = 0; i < handler.object.size(); i++) {
             GameObject tempObject = handler.object.get(i);
-            if(tempObject.getId() == ID.Player){
-                return (Player)tempObject;
+            if (tempObject.getId() == ID.Player) {
+                return (Player) tempObject;
             }
         }
         return null;
     }
-    public void setScore(int score){
+
+    public void setScore(int score) {
         this.score = score;
     }
-    public int getScore(){
+
+    public int getScore() {
         return score;
     }
-    public int getLevel(){
+
+    public int getLevel() {
         return level;
     }
-    public void setLevel(int level){
+
+    public void setLevel(int level) {
         this.level = level;
     }
 }

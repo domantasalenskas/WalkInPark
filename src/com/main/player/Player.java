@@ -1,6 +1,7 @@
 package com.main.player;
 
 import com.main.UI.HUD;
+import com.main.UI.Sounds;
 import com.main.falling.objects.ScoreObject;
 import com.main.falling.objects.SpeedBoost;
 import com.main.logic.ID;
@@ -14,11 +15,14 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.io.*;
+import java.net.URL;
+import javax.sound.sampled.*;
 
 /**
  * Created by ulis on 2017-07-14.
  */
-public class Player extends GameObject{
+public class Player extends GameObject {
 
     enum PlayerState {
         StandingStill,
@@ -35,6 +39,7 @@ public class Player extends GameObject{
     int currentTick = 0;
     long timer = System.currentTimeMillis();
     public int speedBoostTime = 0;
+    private Sounds sounds = new Sounds();
 
     int sizeX = 83;
     int sizeY = 122;
@@ -63,11 +68,14 @@ public class Player extends GameObject{
         x = Game.clamp((int) x, 0, Game.WIDTH - 80);
         y = Game.clamp((int) y, 0, Game.HEIGHT - 150);
 
-        if(HEALTH < 1)
+        if (HEALTH < 1) {
             Game.gameState = Game.STATE.Dead;
+        }
+
         collision();
 
     }
+
 
     private void collision() {
         for (int i = 0; i < handler.object.size(); i++) {
@@ -76,21 +84,24 @@ public class Player extends GameObject{
 
             if (tempObject.getId() == ID.ScoreObject) {
                 if (getBounds().intersects(tempObject.getBounds())) {
+
                     handler.removeObject(tempObject);
                     HUD.score += 100; //score increment
-
+                    sounds.playScoreSound();
                 }
             }
             if (tempObject.getId() == ID.Enemy) {
                 if (getBounds().intersects(tempObject.getBounds())) {
                     HEALTH = HEALTH - 25; //damage
                     handler.removeObject(tempObject);
+                    sounds.playEnemySound();
                 }
             }
             if (tempObject.getId() == ID.HealthPack) {
                 if (getBounds().intersects(tempObject.getBounds())) {
                     HEALTH = HEALTH + 50; //heal rate
                     handler.removeObject(tempObject);
+                    sounds.playHealthSound();
                 }
             }
             if (tempObject.getId() == ID.ShieldUpgrade) {
@@ -104,6 +115,7 @@ public class Player extends GameObject{
                     }
                     handler.addObject(new Shield(x, y, ID.Shield, handler));
                     Shield.shieldInstances = 2;
+                    sounds.playShieldSound();
                 }
             }
             if (tempObject.getId() == ID.SpeedBoost) {
@@ -111,19 +123,21 @@ public class Player extends GameObject{
                     playerSpeed += 5;
                     handler.removeObject(tempObject);
                     speedBoostTime = 10;
+                    sounds.playSpeedSound();
                 }
             }
-            if(tempObject.getId() == ID.ShootingUpgrade) {
-                if(getBounds().intersects(tempObject.getBounds())){
+            if (tempObject.getId() == ID.ShootingUpgrade) {
+                if (getBounds().intersects(tempObject.getBounds())) {
                     handler.removeObject(tempObject);
                     bullets += 5;
+                    sounds.playGunSound();
                 }
             }
         }
 
         if (System.currentTimeMillis() - timer > 1000) {
             timer += 1000;
-            if(speedBoostTime > 0) {
+            if (speedBoostTime > 0) {
                 speedBoostTime--;
                 System.out.println(speedBoostTime);
                 if (speedBoostTime == 0) {
@@ -140,9 +154,9 @@ public class Player extends GameObject{
         currentTick++;
         if (HEALTH == 0) {
 
-            if(currentTick % 20 == 0){
+            if (currentTick % 20 == 0) {
                 playerImage = "/Images/Player/Dead/Dead__00" + imgNumDead + ".png";
-                if(imgNumDead < 9)
+                if (imgNumDead < 9)
                     imgNumDead++;
             }
             g.drawImage(image, (int) x, (int) y, sizeX + 70, sizeY, null);
@@ -152,18 +166,18 @@ public class Player extends GameObject{
             if (velX < 0 && currentTick > 10) {
                 currentTick = 0;
                 playerImage = "/Images/Player/Left/Run__00" + imgNumLeft + ".png";
-                if(imgNumLeft < 9)
+                if (imgNumLeft < 9)
                     imgNumLeft++;
                 else imgNumLeft = 0;
             }
             if (velX > 0 && currentTick > 10) {
                 currentTick = 0;
                 playerImage = "/Images/Player/Right/Run__00" + imgNumRight + ".png";
-                if(imgNumRight < 9)
+                if (imgNumRight < 9)
                     imgNumRight++;
                 else imgNumRight = 0;
             }
-            if(velX == 0){
+            if (velX == 0) {
                 playerImage = "/Images/Player/playerForward.png";
             }
             g.drawImage(image, (int) x, (int) y, sizeX, sizeY, null);

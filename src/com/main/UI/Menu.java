@@ -1,17 +1,14 @@
 package com.main.UI;
 
 import com.main.DbConnect;
-import com.main.logic.ID;
 import com.main.launcher.Game;
 import com.main.logic.Handler;
 import com.main.player.KeyInputClass;
-import com.main.player.Player;
 
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.LinkedList;
-import java.util.Random;
 
 /**
  * Created by ulis on 2017-08-28.
@@ -32,7 +29,7 @@ public class Menu extends MouseAdapter {
         int mx = e.getX();
         int my = e.getY();
 
-        if (Game.gameState == Game.STATE.Menu || game.gameState == Game.STATE.Help || game.gameState ==Game.STATE.Scoreboard) {
+        if (Game.gameState == Game.STATE.Menu || game.gameState == Game.STATE.Help || game.gameState == Game.STATE.Scoreboard) {
             //play button
             if (mouseOver(mx, my, Game.WIDTH / 2 - 170, 200, 300, 80)) {
                 game.gameState = Game.STATE.Game;
@@ -44,7 +41,7 @@ public class Menu extends MouseAdapter {
                 game.gameState = Game.STATE.Help;
             }
             //help back button
-            if (mouseOver(mx, my, Game.WIDTH / 2 - 170, -(150 - Game.HEIGHT), 300, 80)){
+            if (mouseOver(mx, my, Game.WIDTH / 2 - 170, -(150 - Game.HEIGHT), 300, 80)) {
                 game.gameState = Game.STATE.Menu;
             }
 
@@ -57,22 +54,23 @@ public class Menu extends MouseAdapter {
                 game.gameState = Game.STATE.Scoreboard;
             }
             //scoreboard back button
-            if (mouseOver(mx, my, Game.WIDTH / 2 - 170, -(150 - Game.HEIGHT), 300, 80)){
+            if (mouseOver(mx, my, Game.WIDTH / 2 - 170, -(150 - Game.HEIGHT), 300, 80)) {
                 game.gameState = Game.STATE.Menu;
             }
 
         }
         // DEAD GAME STATE
-        if(Game.gameState == Game.STATE.Dead) {
+        if (Game.gameState == Game.STATE.Dead) {
+
             if (mouseOver(mx, my, 45, 605, 180, 85)) {
                 System.exit(1);
             }
 
-             if (mouseOver(mx, my, 745, 607, 210, 65)) {
+            if (mouseOver(mx, my, 745, 607, 210, 65)) {
                 game.gameState = Game.STATE.Menu;
                 handler.object.remove(0);
             }
-             if(mouseOver(mx,my, Game.WIDTH / 2-170,490,320,50)){
+            if (mouseOver(mx, my, Game.WIDTH / 2 - 170, 490, 320, 50)) {
                 game.gameState = Game.STATE.SubmitScore;
                 handler.object.remove(0);
             }
@@ -118,23 +116,27 @@ public class Menu extends MouseAdapter {
             g.setFont(fnt2);
             g.setColor(Color.WHITE);
             g.drawString("To play this game use AD to move ", 100, 100);
-            g.drawString("and SPACE to shoot.", 100, 170);
+            g.drawString("and SPACE to shoot. Game time is", 100, 170);
+            g.drawString("60 seconds. After time ticks to 0,", 100, 240);
+            g.drawString("player dies.", 100, 310);
+
 
             g.drawRect(Game.WIDTH / 2 - 170, -(150 - Game.HEIGHT), 300, 80);
             g.drawString("Back", Game.WIDTH / 2 - 80, -(95 - Game.HEIGHT));
 
-        } else if (game.gameState == Game.STATE.Dead){
-            g.drawRect(Game.WIDTH / 2-170,490,320,50);
-
-        } else if (game.gameState == Game.STATE.Scoreboard){
+        } else if (game.gameState == Game.STATE.Scoreboard) {
             LinkedList<String> list = db.getData();
             int slideImageCounter = 2;
-            for(int i = 0; i < 9; i++){
-                Font fnt = new Font("arial", 1, 30);
+            int size = 9;
+            if (list.size() < size * 2) {
+                size = list.size() - 2;
+            }
+            for (int i = 0; i < size; i++) {
+                Font fnt = new Font("OptimusPrinceps", 1, 30);
                 g.setFont(fnt);
                 g.setColor(Color.WHITE);
-                g.drawString(list.get(i*2), Game.WIDTH/6, 60*slideImageCounter+1);
-                g.drawString(list.get(i*2+1), Game.WIDTH*4/6, 60*slideImageCounter+1);
+                g.drawString(list.get(i * 2), Game.WIDTH / 6, 60 * slideImageCounter + 1);
+                g.drawString(list.get(i * 2 + 1), Game.WIDTH * 4 / 6, 60 * slideImageCounter + 1);
                 slideImageCounter++;
             }
             g.setFont(new Font("arial", 1, 70));

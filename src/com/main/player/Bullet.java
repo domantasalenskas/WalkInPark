@@ -1,6 +1,7 @@
 package com.main.player;
 
 import com.main.UI.HUD;
+import com.main.UI.Sounds;
 import com.main.launcher.Game;
 import com.main.logic.GameObject;
 import com.main.logic.Handler;
@@ -12,7 +13,7 @@ import java.util.Random;
 
 public class Bullet extends GameObject{
     private Handler handler;
-
+    private Sounds sounds = new Sounds();
     Random r = new Random();
 
     private int size = 8;
@@ -58,6 +59,7 @@ public class Bullet extends GameObject{
 
             if (tempObject.getId() == ID.Enemy) {
                 if (getBounds().intersects(tempObject.getBounds())) {
+                    sounds.playShatterSound();
                     handler.removeObject(tempObject);
                     handler.removeObject(this);
                     HUD.score += 500;

@@ -18,8 +18,7 @@ public class DbConnect {
     public DbConnect(){
         try{
             Class.forName("com.mysql.jdbc.Driver");
-
-            con = DriverManager.getConnection("", "not working", "not working");
+            con = DriverManager.getConnection("jdbc:mysql://sql11.freemysqlhosting.net:3306/sql11210138", "sql11210138", "meu5NJjWVk");
             st = con.createStatement();
         }catch(Exception ex){
             System.out.println("error has occured with DB : " + ex);

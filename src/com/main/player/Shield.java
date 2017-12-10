@@ -1,5 +1,6 @@
 package com.main.player;
 
+import com.main.UI.Sounds;
 import com.main.logic.GameObject;
 import com.main.UI.HUD;
 import com.main.logic.Handler;
@@ -14,6 +15,7 @@ public class Shield extends GameObject {
     public static int shieldInstances = 2;
 
     Random r = new Random();
+    Sounds sounds = new Sounds();
 
     int size = 32;
 
@@ -63,6 +65,7 @@ public class Shield extends GameObject {
                 if (getBounds().intersects(tempObject.getBounds())) {
                     handler.removeObject(tempObject);
                     HUD.score += 100; //score increment
+                    sounds.playScoreSound();
 
                 }
             }
@@ -70,8 +73,10 @@ public class Shield extends GameObject {
                 if (getBounds().intersects(tempObject.getBounds())) {
                     handler.removeObject(tempObject);
                     shieldInstances--;
+                    sounds.playShieldBlockSound();
                     if(shieldInstances == 0){
                         handler.removeObject(this);
+
                     }
                 }
             }
